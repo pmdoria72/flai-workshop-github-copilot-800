@@ -40,32 +40,47 @@ const Teams = () => {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><div className="alert alert-info">Loading teams...</div></div>;
-  if (error) return <div className="container mt-4"><div className="alert alert-danger">Error: {error}</div></div>;
+  if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading teams...</div></div>;
+  if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">OctoFit Teams</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">👥 OctoFit Teams</h2>
+        <span className="badge bg-info">{teams.length} Teams</span>
+      </div>
+      
       <div className="row">
         {teams.map((team, index) => (
-          <div key={team._id || index} className="col-md-6 mb-3">
-            <div className="card">
+          <div key={team._id || index} className="col-lg-6 mb-4">
+            <div className="card h-100">
+              <div className="card-header bg-primary text-white">
+                <h5 className="card-title mb-0">{team.name}</h5>
+              </div>
               <div className="card-body">
-                <h5 className="card-title">{team.name}</h5>
-                <p className="card-text">
-                  <strong>Description:</strong> {team.description}<br />
-                  <strong>Captain:</strong> {team.captain?.username || 'N/A'}<br />
-                  <strong>Members:</strong> {team.member_count || team.members?.length || 0}<br />
-                  <strong>Total Points:</strong> {team.total_points}
-                </p>
+                <p className="card-text text-muted">{team.description}</p>
+                <ul className="list-group list-group-flush">
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>Captain:</strong>
+                    <span className="badge bg-warning text-dark">{team.captain?.username || 'N/A'}</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>Members:</strong>
+                    <span className="badge bg-info">{team.member_count || team.members?.length || 0}</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between align-items-center">
+                    <strong>Total Points:</strong>
+                    <span className="badge bg-success">{team.total_points} pts</span>
+                  </li>
+                </ul>
                 {team.members && team.members.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Team Members:</strong>
-                    <ul className="list-unstyled ms-3">
+                  <div className="mt-3">
+                    <h6 className="text-muted">Team Members:</h6>
+                    <div className="d-flex flex-wrap gap-2">
                       {team.members.map(member => (
-                        <li key={member.id}>• {member.username}</li>
+                        <span key={member.id} className="badge bg-secondary">{member.username}</span>
                       ))}
-                    </ul>
+                    </div>
                   </div>
                 )}
               </div>

@@ -49,36 +49,49 @@ const Workouts = () => {
     return badges[level] || 'secondary';
   };
 
-  if (loading) return <div className="container mt-4"><div className="alert alert-info">Loading workouts...</div></div>;
-  if (error) return <div className="container mt-4"><div className="alert alert-danger">Error: {error}</div></div>;
+  if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading workouts...</div></div>;
+  if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Workout Suggestions</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">💪 Workout Suggestions</h2>
+        <span className="badge bg-warning text-dark">{workouts.length} Workouts</span>
+      </div>
+      
       <div className="row">
         {workouts.map((workout, index) => (
-          <div key={workout._id || index} className="col-md-6 mb-3">
-            <div className="card">
+          <div key={workout._id || index} className="col-lg-6 mb-4">
+            <div className="card h-100">
+              <div className="card-header d-flex justify-content-between align-items-center">
+                <h5 className="card-title mb-0">{workout.title}</h5>
+                <span className={`badge bg-${getDifficultyBadge(workout.difficulty_level)}`}>
+                  {workout.difficulty_level.toUpperCase()}
+                </span>
+              </div>
               <div className="card-body">
-                <h5 className="card-title">
-                  {workout.title}
-                  <span className={`badge bg-${getDifficultyBadge(workout.difficulty_level)} ms-2`}>
-                    {workout.difficulty_level}
-                  </span>
-                </h5>
-                <p className="card-text">
-                  <strong>Description:</strong> {workout.description}<br />
-                  <strong>Type:</strong> {workout.activity_type}<br />
-                  <strong>Duration:</strong> {workout.duration} minutes
-                </p>
+                <p className="card-text text-muted">{workout.description}</p>
+                <ul className="list-group list-group-flush mb-3">
+                  <li className="list-group-item d-flex justify-content-between">
+                    <strong>Type:</strong>
+                    <span className="badge bg-info">{workout.activity_type}</span>
+                  </li>
+                  <li className="list-group-item d-flex justify-content-between">
+                    <strong>Duration:</strong>
+                    <span className="badge bg-primary">{workout.duration} min</span>
+                  </li>
+                </ul>
                 {workout.instructions && (
-                  <div className="mt-2">
-                    <strong>Instructions:</strong>
-                    <pre className="mt-2 p-2 bg-light rounded" style={{whiteSpace: 'pre-wrap'}}>
+                  <div>
+                    <h6 className="text-muted">Instructions:</h6>
+                    <pre className="bg-light p-3 rounded border" style={{whiteSpace: 'pre-wrap', fontSize: '0.9rem'}}>
                       {workout.instructions}
                     </pre>
                   </div>
                 )}
+              </div>
+              <div className="card-footer bg-transparent">
+                <button className="btn btn-primary btn-sm w-100">Start Workout</button>
               </div>
             </div>
           </div>

@@ -47,46 +47,68 @@ const Leaderboard = () => {
     return '#6c757d';
   };
 
-  if (loading) return <div className="container mt-4"><div className="alert alert-info">Loading leaderboard...</div></div>;
-  if (error) return <div className="container mt-4"><div className="alert alert-danger">Error: {error}</div></div>;
+  const getRankIcon = (rank) => {
+    if (rank === 1) return '🥇';
+    if (rank === 2) return '🥈';
+    if (rank === 3) return '🥉';
+    return '🏅';
+  };
+
+  if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading leaderboard...</div></div>;
+  if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Weekly Leaderboard</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">🏆 Weekly Leaderboard</h2>
+        <span className="badge bg-danger">{leaderboard.length} Competitors</span>
+      </div>
+      
       <div className="table-responsive">
-        <table className="table table-striped table-hover">
-          <thead className="table-dark">
+        <table className="table table-hover align-middle">
+          <thead>
             <tr>
-              <th>Rank</th>
-              <th>User</th>
-              <th>Points</th>
-              <th>Period</th>
+              <th width="10%">Rank</th>
+              <th width="40%">User</th>
+              <th width="20%">Points</th>
+              <th width="30%">Period</th>
             </tr>
           </thead>
           <tbody>
             {leaderboard.map((entry, index) => (
-              <tr key={entry._id || index}>
+              <tr key={entry._id || index} className={entry.rank <= 3 ? 'table-warning' : ''}>
                 <td>
-                  <span 
-                    className="badge rounded-circle p-2" 
-                    style={{backgroundColor: getRankColor(entry.rank), minWidth: '40px'}}
-                  >
-                    #{entry.rank}
-                  </span>
+                  <div className="d-flex align-items-center">
+                    <span 
+                      className="badge rounded-circle d-inline-flex align-items-center justify-content-center" 
+                      style={{
+                        backgroundColor: getRankColor(entry.rank), 
+                        width: '45px', 
+                        height: '45px',
+                        fontSize: '1.1rem',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      #{entry.rank}
+                    </span>
+                    <span className="ms-2" style={{fontSize: '1.5rem'}}>{getRankIcon(entry.rank)}</span>
+                  </div>
                 </td>
                 <td>
-                  <strong>{entry.user?.username || 'Unknown'}</strong>
-                  <br />
+                  <div>
+                    <strong className="d-block">{entry.user?.username || 'Unknown'}</strong>
+                    <small className="text-muted">
+                      {entry.user?.first_name} {entry.user?.last_name}
+                    </small>
+                  </div>
+                </td>
+                <td>
+                  <span className="badge bg-primary fs-5 px-3 py-2">{entry.points.toLocaleString()} pts</span>
+                </td>
+                <td>
                   <small className="text-muted">
-                    {entry.user?.first_name} {entry.user?.last_name}
-                  </small>
-                </td>
-                <td>
-                  <span className="badge bg-primary fs-6">{entry.points} pts</span>
-                </td>
-                <td>
-                  <small>
-                    {new Date(entry.period_start).toLocaleDateString()} - {new Date(entry.period_end).toLocaleDateString()}
+                    <strong>Start:</strong> {new Date(entry.period_start).toLocaleDateString()}<br />
+                    <strong>End:</strong> {new Date(entry.period_end).toLocaleDateString()}
                   </small>
                 </td>
               </tr>

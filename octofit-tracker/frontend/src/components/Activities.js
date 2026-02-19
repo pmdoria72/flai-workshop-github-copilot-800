@@ -40,33 +40,47 @@ const Activities = () => {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><div className="alert alert-info">Loading activities...</div></div>;
-  if (error) return <div className="container mt-4"><div className="alert alert-danger">Error: {error}</div></div>;
+  if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading activities...</div></div>;
+  if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">Recent Activities</h2>
-      <div className="row">
-        {activities.map((activity, index) => (
-          <div key={activity._id || index} className="col-md-6 mb-3">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">
-                  {activity.activity_type.charAt(0).toUpperCase() + activity.activity_type.slice(1)}
-                </h5>
-                <p className="card-text">
-                  <strong>User:</strong> {activity.user?.username || 'Unknown'}<br />
-                  <strong>Duration:</strong> {activity.duration} minutes<br />
-                  {activity.distance && <><strong>Distance:</strong> {activity.distance} km<br /></>}
-                  <strong>Calories:</strong> {activity.calories_burned} cal<br />
-                  <strong>Points:</strong> {activity.points_earned}<br />
-                  <strong>Date:</strong> {new Date(activity.date).toLocaleDateString()}<br />
-                  {activity.notes && <><strong>Notes:</strong> {activity.notes}</>}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">📊 Recent Activities</h2>
+        <span className="badge bg-success">{activities.length} Activities</span>
+      </div>
+      
+      <div className="table-responsive">
+        <table className="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Activity Type</th>
+              <th>Duration</th>
+              <th>Distance</th>
+              <th>Calories</th>
+              <th>Points</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {activities.map((activity, index) => (
+              <tr key={activity._id || index}>
+                <td><strong>{activity.user?.username || 'Unknown'}</strong></td>
+                <td>
+                  <span className="badge bg-info">
+                    {activity.activity_type.charAt(0).toUpperCase() + activity.activity_type.slice(1)}
+                  </span>
+                </td>
+                <td>{activity.duration} min</td>
+                <td>{activity.distance ? `${activity.distance} km` : 'N/A'}</td>
+                <td>{activity.calories_burned} cal</td>
+                <td><span className="badge bg-warning text-dark">{activity.points_earned} pts</span></td>
+                <td>{new Date(activity.date).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

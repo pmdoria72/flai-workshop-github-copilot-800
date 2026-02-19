@@ -40,27 +40,39 @@ const Users = () => {
       });
   }, []);
 
-  if (loading) return <div className="container mt-4"><div className="alert alert-info">Loading users...</div></div>;
-  if (error) return <div className="container mt-4"><div className="alert alert-danger">Error: {error}</div></div>;
+  if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading users...</div></div>;
+  if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
   return (
     <div className="container mt-4">
-      <h2 className="mb-4">OctoFit Users</h2>
-      <div className="row">
-        {users.map(user => (
-          <div key={user.id} className="col-md-6 mb-3">
-            <div className="card">
-              <div className="card-body">
-                <h5 className="card-title">{user.username}</h5>
-                <p className="card-text">
-                  <strong>Name:</strong> {user.first_name} {user.last_name}<br />
-                  <strong>Email:</strong> {user.email}<br />
-                  <strong>Joined:</strong> {new Date(user.date_joined).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">👥 OctoFit Users</h2>
+        <span className="badge bg-primary">{users.length} Total Users</span>
+      </div>
+      
+      <div className="table-responsive">
+        <table className="table table-hover align-middle">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Username</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Joined Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(user => (
+              <tr key={user.id}>
+                <td><span className="badge bg-secondary">#{user.id}</span></td>
+                <td><strong>{user.username}</strong></td>
+                <td>{user.first_name} {user.last_name}</td>
+                <td><a href={`mailto:${user.email}`} className="text-decoration-none">{user.email}</a></td>
+                <td>{new Date(user.date_joined).toLocaleDateString()}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );
