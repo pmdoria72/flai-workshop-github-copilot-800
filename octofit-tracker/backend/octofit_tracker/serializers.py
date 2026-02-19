@@ -109,11 +109,33 @@ class LeaderboardSerializer(serializers.ModelSerializer):
     """Serializer for Leaderboard model"""
     user = UserSerializer(read_only=True)
     _id = serializers.CharField(read_only=True)
+    team = serializers.SerializerMethodField()
+    total_calories = serializers.SerializerMethodField()
     
     class Meta:
         model = Leaderboard
-        fields = ['_id', 'user', 'period', 'rank', 'points', 'period_start', 'period_end', 'updated_at']
+        fields = ['_id', 'user', 'period', 'rank', 'points', 'period_start', 'period_end', 'team', 'total_calories', 'updated_at']
         read_only_fields = ['_id', 'updated_at']
+
+    def get_team(self, obj):
+        """Get the user's primary team (first team they're a member of)"""
+        team = Team.objects.filter(members=obj.user).first()
+        if team:
+            return {
+                'id': str(team._id),
+                'name': team.name
+            }
+        return None
+    
+    def get_total_calories(self, obj):
+        """Calculate total calories burned by the user during the period"""
+        from django.db.models import Sum
+        total = Activity.objects.filter(
+            user=obj.user,
+            date__gte=obj.period_start,
+            date__lte=obj.period_end
+        ).aggregate(total_calories=Sum('calories_burned'))['total_calories']
+        return total or 0
 
     def to_representation(self, instance):
         """Convert ObjectId to string"""

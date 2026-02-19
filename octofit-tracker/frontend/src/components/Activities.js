@@ -43,6 +43,19 @@ const Activities = () => {
   if (loading) return <div className="container mt-4"><div className="alert alert-info"><i className="bi bi-hourglass-split"></i> Loading activities...</div></div>;
   if (error) return <div className="container mt-4"><div className="alert alert-danger"><i className="bi bi-exclamation-triangle"></i> Error: {error}</div></div>;
 
+  // Helper function to format date properly (handles YYYY-MM-DD format)
+  const formatDate = (dateString) => {
+    if (!dateString) return 'N/A';
+    // For YYYY-MM-DD format, parse it directly to avoid timezone issues
+    const [year, month, day] = dateString.split('-');
+    if (year && month && day) {
+      const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+      return date.toLocaleDateString();
+    }
+    // Fallback for other formats
+    return new Date(dateString).toLocaleDateString();
+  };
+
   return (
     <div className="container mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
@@ -76,7 +89,7 @@ const Activities = () => {
                 <td>{activity.distance ? `${activity.distance} km` : 'N/A'}</td>
                 <td>{activity.calories_burned} cal</td>
                 <td><span className="badge bg-warning text-dark">{activity.points_earned} pts</span></td>
-                <td>{new Date(activity.date).toLocaleDateString()}</td>
+                <td>{formatDate(activity.date)}</td>
               </tr>
             ))}
           </tbody>

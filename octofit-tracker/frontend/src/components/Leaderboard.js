@@ -68,10 +68,12 @@ const Leaderboard = () => {
         <table className="table table-hover align-middle">
           <thead>
             <tr>
-              <th width="10%">Rank</th>
-              <th width="40%">User</th>
-              <th width="20%">Points</th>
-              <th width="30%">Period</th>
+              <th width="8%">Rank</th>
+              <th width="25%">User</th>
+              <th width="20%">Team</th>
+              <th width="12%">Points</th>
+              <th width="15%">Calories</th>
+              <th width="20%">Period</th>
             </tr>
           </thead>
           <tbody>
@@ -103,7 +105,17 @@ const Leaderboard = () => {
                   </div>
                 </td>
                 <td>
+                  {entry.team ? (
+                    <span className="badge bg-info">{entry.team.name}</span>
+                  ) : (
+                    <span className="text-muted">No Team</span>
+                  )}
+                </td>
+                <td>
                   <span className="badge bg-primary fs-5 px-3 py-2">{entry.points.toLocaleString()} pts</span>
+                </td>
+                <td>
+                  <span className="badge bg-danger">{entry.total_calories?.toLocaleString() || 0} cal</span>
                 </td>
                 <td>
                   <small className="text-muted">
